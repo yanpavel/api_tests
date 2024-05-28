@@ -3,6 +3,7 @@ using RestSharp;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using Microsoft.Playwright;
 
 namespace API_tests_tapyou
 {
@@ -22,7 +23,7 @@ namespace API_tests_tapyou
                 gender = "male"
             };
             var response = await client.GetJsonAsync<JsonRoot>("users", args);
-            _maleUsers = response.IdList.ToList(); //save Id values of male users
+            _maleUsers = response.IdList.ToList(); //save Id values of male users            
             Assert.That(response.IsSuccess, Is.EqualTo(true)); //checking is request successful or not            
         }
 
@@ -121,9 +122,20 @@ namespace API_tests_tapyou
             {
                 gender = "queer"
             };
-            var request = new RestRequest($"users/{args}");
-            var response = await client.GetAsync(request);
-            Assert.That(response.StatusCode.ToString(), Is.EqualTo("NotFound")); //checking is request returning valid status code or not              
+            var response = new JsonRoot();
+            try
+            {
+                response = await client.GetJsonAsync<JsonRoot>("users", args);
+            }
+            catch (Exception HttpRequestException)
+            {
+                Console.WriteLine($"{HttpRequestException.Message}");
+                Console.WriteLine(response.Error);
+            }
+            finally
+            {
+                Assert.That(response.Status.ToString(), Is.EqualTo("404")); //checking is request returning valid status code or not 
+            }       
         }
 
         [Test, Description("Отправить запрос с невалидным гендером GET baseUrl{users?gender=1}")]
@@ -134,19 +146,39 @@ namespace API_tests_tapyou
             {
                 gender = 1
             };
-            var request = new RestRequest($"users/{args}");
-            var response = await client.GetAsync(request);
-            Assert.That(response.StatusCode.ToString(), Is.EqualTo("NotFound")); //checking is request returning valid status code or not     
-
+            var response = new JsonRoot();
+            try
+            {
+                response = await client.GetJsonAsync<JsonRoot>("users", args);
+            }
+            catch (Exception HttpRequestException)
+            {
+                Console.WriteLine($"{HttpRequestException.Message}");
+            }
+            finally
+            {
+                Assert.That(response.Status.ToString(), Is.EqualTo("404")); //checking is request returning valid status code or not    
+            }
+            
         }
 
         [Test, Description("Отправить запрос с несуществующим пользователем")]
         public async Task UserTest8()
         {
             var client = new RestClient(_baseUrl);
-            var request = new RestRequest("users/2048");
-            var response = await client.GetAsync(request);
-            Assert.That(response.StatusCode.ToString(), Is.EqualTo("NotFound")); //checking is request returning valid status code or not   
+            var response = new JsonRoot();
+            try
+            {
+                response = await client.GetJsonAsync<JsonRoot>("user/2048");
+            }
+            catch (Exception HttpRequestException)
+            {
+                Console.WriteLine($"{HttpRequestException.Message}");
+            }
+            finally
+            {
+                Assert.That(response.Status.ToString(), Is.EqualTo("404")); //checking is request returning valid status code or not                    
+            }
         }
     }
 }

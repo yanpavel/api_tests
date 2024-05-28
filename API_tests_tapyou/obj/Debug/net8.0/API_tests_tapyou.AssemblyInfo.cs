@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("API_tests_tapyou")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8ff37f28fc309d9b2702cd0635727cd723945a3b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0869ffd4e05ab82ed07bb1844cc93a8d60501e47")]
 [assembly: System.Reflection.AssemblyProductAttribute("API_tests_tapyou")]
 [assembly: System.Reflection.AssemblyTitleAttribute("API_tests_tapyou")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
